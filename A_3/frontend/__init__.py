@@ -4,7 +4,6 @@ from frontend.image import image_routes
 from frontend.manager import manager_routes
 from frontend.stat import stat_routes
 
-
 webapp = Flask(__name__)
 webapp.register_blueprint(api_routes)
 webapp.register_blueprint(image_routes)
