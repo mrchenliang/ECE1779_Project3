@@ -6,7 +6,7 @@ import requests, json
 api_routes = Blueprint('api_routes', __name__)
 
 # Backend Host Port
-backend_host = 'http://0.0.0.0:5002'
+memcache_host = 'http://0.0.0.0:5001'
 
 @api_routes.route('/api/list_keys', methods=['POST'])
 # api end point to get a list of keys
@@ -45,20 +45,18 @@ def key(key_value):
         request_json = {
             'key': key_value
         }
-        response = requests.get(backend_host + '/hash_key', json=request_json)
-        dictionary = json.loads(response.content.decode('utf-8'))
-        ip=dictionary[1]
         # get the image by key from the memcache
-        res = requests.post('http://' + str(ip) + ':5000/get_from_memcache', json=request_json)
+        res = requests.post(memcache_host + '/get_from_memcache', json=request_json)
         # if the image is not by the key in the memcache
         if res.text == 'Key Not Found' or res == None:
             # queries the database images by specific key
             cnx = get_db()
             cursor = cnx.cursor(buffered=True)
-            query = 'SELECT images.key FROM images where images.key = %s'
+            query = 'SELECT images.location FROM images where images.key = %s'
             cursor.execute(query, (key_value,))
             # if the image is found
             if cursor._rowcount:
+                location=str(cursor.fetchone()[0]) 
                 cnx.close()
                 # convert the image to Base64
                 image = download_image(key_value)
@@ -75,7 +73,7 @@ def key(key_value):
                     key_value: image 
                 }
                 # put the key and image into the memcache
-                res = requests.post('http://'+ str(ip) + ':5000/put_into_memcache', json=request_json)
+                res = requests.post(memcache_host + '/put_into_memcache', json=request_json)
                 response = {
                     'success': 'true' , 
                     'content': image

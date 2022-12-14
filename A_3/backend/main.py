@@ -4,7 +4,7 @@ from backend import AWS_EC2_operator
 from frontend.database_helper import get_db 
 from backend.AWS_S3_operator import clear_images
 from backend.AWS_Rekognition_operator import check_image_rekognition
-from managerapp.constants import default_max_capacity, default_replacement_policy
+from frontend.constants import default_max_capacity, default_replacement_policy
 import json, time, requests, datetime, os
 import hashlib
 import boto3

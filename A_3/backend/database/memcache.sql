@@ -29,19 +29,6 @@ CREATE TABLE IF NOT EXISTS `memcache`.`cache_properties` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `memcache`.`cache_policies` ;
-
-CREATE TABLE IF NOT EXISTS `memcache`.`cache_policies` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `max_miss_rate` FLOAT NOT NULL,
-  `min_miss_rate` FLOAT NOT NULL,
-  `expansion_ratio` FLOAT NOT NULL,
-  `shrink_ratio` FLOAT NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`))
-  
-ENGINE = InnoDB;
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

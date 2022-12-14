@@ -82,9 +82,3 @@ def keys_list():
       return render_template('keys_list.html', keys=keys, length=len(keys))
     else:
       return render_template('keys_list.html')
-
-@image_routes.route('/navigate')
-def navigate():
-	hostname = request.headers.get('Host').split(':')[0]
-	print(hostname)
-	return redirect('http://'+hostname + ':5001')
