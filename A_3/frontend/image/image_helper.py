@@ -1,7 +1,7 @@
 import base64, os, requests, boto3, tempfile, json
 from botocore.config import Config
 # from frontend.image import s3_storage_helper
-from frontend.database_helper import get_db
+from database_helper import get_db
 
 config = Config(
     region_name = 'us-east-1',

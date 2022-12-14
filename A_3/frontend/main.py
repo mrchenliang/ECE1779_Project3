@@ -3,10 +3,10 @@ from flask import Flask, render_template, g
 # from frontend.constants import default_max_capacity, default_replacement_policy
 # from frontend.manager.manager_helper import set_cache
 from flask import Flask
-from frontend.api import api_routes
-from frontend.image import image_routes
-from frontend.manager import manager_routes
-from frontend.stat import stat_routes
+from api import api_routes
+from image import image_routes
+from manager import manager_routes
+from stat import stat_routes
 
 webapp = Flask(__name__)
 webapp.register_blueprint(api_routes)

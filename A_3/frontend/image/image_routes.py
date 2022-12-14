@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, render_template, request, send_file, redirect
-from frontend.database_helper import get_db
-from frontend.image.image_helper import *
+from database_helper import get_db
+from image.image_helper import *
 import requests, json
 
 image_routes = Blueprint('image_routes', __name__)

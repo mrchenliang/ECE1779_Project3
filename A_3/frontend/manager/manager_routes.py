@@ -2,9 +2,9 @@
 from flask import Blueprint
 import requests, time
 from flask import render_template, request, redirect
-from frontend.database_helper import get_db
-from frontend.image.image_helper import clear_images
-from frontend.manager.manager_helper import get_cache, set_cache, clear_database
+from database_helper import get_db
+from image.image_helper import clear_images
+from manager.manager_helper import get_cache, set_cache, clear_database
 
 manager_routes = Blueprint("manager_routes", __name__)
 memcache_host = "http://0.0.0.0:5001"

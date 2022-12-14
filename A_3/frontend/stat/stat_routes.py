@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 import json
-from frontend.stat.stat_calculations import get_stat_logs
+from stat.stat_calculations import get_stat_logs
 
 stat_routes = Blueprint("stat_routes", __name__)
 
