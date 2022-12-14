@@ -14,7 +14,8 @@ db_config = {'user': config["MySQL_user"],
              'database': 'memcache'
             }
 
-IMAGE_FOLDER = os.path.dirname(os.path.abspath(__file__)) + 'main/frontend/static/images'
+ALLOWED_IMAGES = ['graffiti', 'art']
+
 
 default_max_capacity = 10
 default_replacement_policy = 'Least Recently Used'

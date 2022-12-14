@@ -28,3 +28,14 @@ def set_cache(max_capacity, replacement_policy):
         return True
     except:
         return None
+
+def clear_database():
+    try:
+        cnx = get_db()
+        cursor = cnx.cursor(buffered = True)
+        query_del = ''' DELETE from images; '''
+        cursor.execute(query_del)
+        cnx.commit()
+        return True
+    except:
+        return None

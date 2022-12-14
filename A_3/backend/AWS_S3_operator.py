@@ -3,7 +3,6 @@ from botocore.exceptions import ClientError
 from botocore.config import Config
 import logging
 import os,base64
-from frontend.constants import IMAGE_FOLDER
 
 my_aws_config = Config(
     region_name = 'us-east-1',

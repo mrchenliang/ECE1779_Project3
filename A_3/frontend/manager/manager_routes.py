@@ -3,9 +3,11 @@ from flask import Blueprint
 import requests, time
 from flask import render_template, request, redirect
 from frontend.database_helper import get_db
-from manager_helper import get_cache, set_cache
+from frontend.image.image_helper import clear_images
+from frontend.manager.manager_helper import get_cache, set_cache, clear_database
 
 manager_routes = Blueprint("manager_routes", __name__)
+memcache_host = "http://0.0.0.0:5001"
 
 @manager_routes.route('/memcache_manager', methods=['GET'])
 def memcache_manager():
@@ -25,7 +27,8 @@ def memcache_properties():
                 'max_capacity': new_capacity, 
                 'replacement_policy': new_policy, 
             }
-            resp = requests.post(backend_host + '/refresh_configuration', json=req)
+            created_at = set_cache(new_capacity, new_policy)
+            resp = requests.post(memcache_host + '/refresh_configuration')
             max_capacity, replacement_policy, created_at = get_cache()
             print(resp.json())
             if resp.json() == 'OK':
@@ -51,25 +54,30 @@ def memcache_properties():
 
 @manager_routes.route('/clear_cache', methods=['GET', 'POST'])
 def clear_cache():
-    global backend_host
+    global memcache_host
     if request.method == 'POST':
-        res = requests.post(backend_host + '/clear_cache_pool')
+        res = requests.post(memcache_host + '/clear_cache')
     max_capacity, replacement_policy, created_at = get_cache()
     return render_template('manager.html',
         max_capacity=max_capacity,
         replacement_policy=replacement_policy,
-        created_at=created_at)
+        created_at=created_at,
+        status="CLEAR")
 
 @manager_routes.route('/clear_data', methods=['GET', 'POST'])
 def clear_data():
-    global backend_host
+    global memcache_host
     if request.method == 'POST':
-        res = requests.post(backend_host + '/clear_data')
+        res = requests.post(memcache_host + '/clear_cache')
+        clear_database()
+        clear_images()
+
     max_capacity, replacement_policy, created_at= get_cache()
     return render_template('manager.html',
         max_capacity=max_capacity,
         replacement_policy=replacement_policy,
-        created_at=created_at)
+        created_at=created_at,
+        status="CLEAR")
 
 
 def get_cache():

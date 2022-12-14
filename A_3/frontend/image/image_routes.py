@@ -6,7 +6,7 @@ import requests, json
 image_routes = Blueprint('image_routes', __name__)
 
 # Backend Host Port
-backend_host = 'http://0.0.0.0:5002'
+memcache_host = 'http://0.0.0.0:5001'
 
 @image_routes.route('/upload_image', methods = ['GET','POST'])
 # returns the upload page
@@ -27,16 +27,14 @@ def get_image(image):
 @image_routes.route('/image', methods = ['GET','POST'])
 # returns the view image page
 def image():
+    global memcache_host
     if request.method == 'POST':
         key_value = request.form.get('key_value')
         # get the image by key from the memcache
         request_json = {
             'key': key_value
         }
-        resp = requests.get(backend_host + '/hash_key', json=request_json)
-        dictionary = json.loads(resp.content.decode('utf-8'))
-        ip=dictionary[1]
-        res = requests.post('http://'+ str(ip) + ':5000/get_from_memcache', json=request_json)
+        res = requests.post(memcache_host + '/get_from_memcache', json=request_json)
         # if the image is not by the key in the memcache
         if res.text == 'Key Not Found' or res == None:
             # queries the database images by specific key
@@ -55,7 +53,7 @@ def image():
                     key_value: image 
                 }
                 # put the key and image into the memcache
-                res = requests.post('http://'+ str(ip) + ':5000/put_into_memcache', json=request_json)
+                res = requests.post(memcache_host + '/put_into_memcache', json=request_json)
                 # returns view image page
                 return render_template('image.html', exists=True, image=image)
             else:
