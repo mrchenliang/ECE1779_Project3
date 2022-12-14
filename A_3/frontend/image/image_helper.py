@@ -1,6 +1,5 @@
-import base64, os, requests, boto3, tempfile, json
+import base64, os, requests, boto3, botocore, tempfile, json
 from botocore.config import Config
-import botocore
 # from frontend.image import s3_storage_helper
 from database_helper import get_db
 
