@@ -1,4 +1,4 @@
-import base64, os, requests, boto3, botocore, tempfile, json
+import base64, os, requests, boto3, tempfile, json
 from botocore.config import Config
 # from frontend.image import s3_storage_helper
 from database_helper import get_db
@@ -18,20 +18,6 @@ rekognition = boto3.client('rekognition', region_name="us-east-1")
 memcache_host = "http://0.0.0.0:5001"
 ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif'}
 ALLOWED_IMAGES = ['graffiti', 'art']
-
-def lambda_handler(event, context):
-    s3_resource = boto3.resource('s3')
-    bucket = s3_resource.Bucket('briansbucket')
-    exists = True
-
-    try:
-        s3_resource.meta.client.head_bucket(Bucket='briansbucket')
-    except botocore.exceptions.ClientError as e:
-        # If a client error is thrown, then check that it was a 404 error.
-        # If it was a 404 error, then the bucket does not exist.
-        error_code = int(e.response['Error']['Code'])
-        if error_code == 404:
-            exists = False
 
 def download_image(key):
     try: 
@@ -56,9 +42,14 @@ def process_image(request, key):
             filename = key + extension
             # save the image in the s3
             print('uploading')
+
             base64_image = base64.b64encode(file.read())
-            s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket', ContentType='image')
-            print("uploaded")
+            try:
+                s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket', ContentType='image')
+                print("uploaded")
+            except:
+                return "INVALID"
+
             
             # post request to invalidate memcache by key
             request_json = {
@@ -110,8 +101,11 @@ def save_image(request, key):
                 # save the image in the s3
                 print("uploading")
                 base64_image = base64.b64encode(file.read())
-                s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket', ContentType='image')
-                print("uploaded")
+                try:
+                    s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket', ContentType='image')
+                    print("uploaded")
+                except:
+                    return "INVALID"
                 
                 # post request to invalidate memcache by key
                 request_json = {
