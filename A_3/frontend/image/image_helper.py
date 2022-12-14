@@ -1,5 +1,6 @@
 import base64, os, requests, boto3, tempfile, json
 from botocore.config import Config
+import botocore
 # from frontend.image import s3_storage_helper
 from database_helper import get_db
 
@@ -18,6 +19,20 @@ rekognition = boto3.client('rekognition', region_name="us-east-1")
 memcache_host = "http://0.0.0.0:5001"
 ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif'}
 ALLOWED_IMAGES = ['graffiti', 'art']
+
+def lambda_handler(event, context):
+    s3_resource = boto3.resource('s3')
+    bucket = s3_resource.Bucket('briansbucket')
+    exists = True
+
+    try:
+        s3_resource.meta.client.head_bucket(Bucket='briansbucket')
+    except botocore.exceptions.ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = int(e.response['Error']['Code'])
+        if error_code == 404:
+            exists = False
 
 def download_image(key):
     try: 
