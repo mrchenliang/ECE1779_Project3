@@ -2,7 +2,17 @@ from glob import glob
 from flask import Flask, render_template, g
 # from frontend.constants import default_max_capacity, default_replacement_policy
 # from frontend.manager.manager_helper import set_cache
-from frontend import webapp
+from flask import Flask
+from frontend.api import api_routes
+from frontend.image import image_routes
+from frontend.manager import manager_routes
+from frontend.stat import stat_routes
+
+webapp = Flask(__name__)
+webapp.register_blueprint(api_routes)
+webapp.register_blueprint(image_routes)
+webapp.register_blueprint(manager_routes)
+webapp.register_blueprint(stat_routes)
 
 # @webapp.before_first_request
 # # initialize the cache configuration settings on first startup
@@ -31,3 +41,6 @@ def page_not_found(e):
 # returns the 500 page
 def internal_server_error(e):
     return render_template('500.html'), 500
+
+if __name__ == '__main__':
+    webapp.run('0.0.0.0',5000,debug=True,threaded=True)
