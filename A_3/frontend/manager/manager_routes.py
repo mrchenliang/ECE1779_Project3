@@ -3,9 +3,9 @@ from flask import Blueprint
 import requests, time
 from flask import render_template, request
 from manager.manager_helper import get_cache, set_cache
+from constants import memcache_host
 
 manager_routes = Blueprint("manager_routes", __name__)
-memcache_host = "http://0.0.0.0:5001"
 
 @manager_routes.route('/memcache_manager', methods=['GET'])
 def memcache_manager():
@@ -48,7 +48,6 @@ def memcache_properties():
 
 @manager_routes.route('/clear_cache', methods=['GET', 'POST'])
 def clear_cache():
-    global memcache_host
     if request.method == 'POST':
         res = requests.post(memcache_host + '/clear_cache')
     max_capacity, replacement_policy = get_cache()

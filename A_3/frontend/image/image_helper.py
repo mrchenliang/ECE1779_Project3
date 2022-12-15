@@ -1,5 +1,6 @@
 import base64, os, requests, boto3, tempfile, json
 from botocore.config import Config
+from constants import memcache_host
 
 config = Config(
     region_name = 'us-east-1',
@@ -15,7 +16,6 @@ rekognition = boto3.client('rekognition')
 dynamodb = boto3.resource('dynamodb')
 images = dynamodb.Table('images')
 
-memcache_host = "http://0.0.0.0:5001"
 ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif'}
 ALLOWED_IMAGES = ['Graffiti', 'Art']
 
@@ -32,7 +32,6 @@ def download_image(key):
         return 'Image Not Found in S3'
 
 def process_image(request, key):
-    global memcache_host
     # get the image file
     file = request.files['file']
     _, extension = os.path.splitext(file.filename)
@@ -79,7 +78,6 @@ def write_dynamo(key, location):
         return 'FAILURE'
 
 def save_image(request, key):
-    global memcache_host
     try:
         # get the image file
         file = request.files['file']

@@ -1,11 +1,9 @@
 from flask import Blueprint, jsonify, render_template, request, send_file, redirect
 from image.image_helper import *
+from constants import memcache_host
 import requests
 
 image_routes = Blueprint('image_routes', __name__)
-
-# Backend Host Port
-memcache_host = 'http://0.0.0.0:5001'
 
 @image_routes.route('/upload_image', methods = ['GET','POST'])
 # returns the upload page
@@ -26,7 +24,6 @@ def get_image(image):
 @image_routes.route('/image', methods = ['GET','POST'])
 # returns the view image page
 def image():
-    global memcache_host
     if request.method == 'POST':
         key_value = request.form.get('key_value')
         # get the image by key from the memcache

@@ -5,8 +5,7 @@ from frontend.database_helper import get_db
 from backend.AWS_S3_operator import clear_images
 from backend.AWS_Rekognition_operator import check_image_rekognition
 from frontend.constants import default_max_capacity, default_replacement_policy
-import json, time, requests, datetime, os
-import hashlib
+import json, requests, datetime, os
 import boto3
 from botocore.config import Config
 

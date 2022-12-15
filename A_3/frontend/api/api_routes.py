@@ -1,11 +1,9 @@
 from flask import Blueprint, jsonify, request
 from image.image_helper import download_image, save_image
+from constants import memcache_host
 import requests, boto3
 
 api_routes = Blueprint('api_routes', __name__)
-
-# Backend Host Port
-memcache_host = 'http://0.0.0.0:5001'
 
 dynamodb = boto3.resource('dynamodb')
 images = dynamodb.Table('images')
