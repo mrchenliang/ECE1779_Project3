@@ -43,7 +43,7 @@ def process_image(request, key):
 
             base64_image = base64.b64encode(file.read())
             try:
-                s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket', ContentType='image')
+                s3.upload_fileobj(base64_image,' briansbucket', key)
                 print("uploaded")
             except:
                 return "INVALID"
@@ -89,7 +89,7 @@ def save_image(request, key):
                 print("uploading")
                 base64_image = base64.b64encode(file.read())
                 try:
-                    s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket', ContentType='image')
+                    s3.upload_fileobj(base64_image,' briansbucket', key)
                     print("uploaded")
                 except:
                     return "INVALID"
