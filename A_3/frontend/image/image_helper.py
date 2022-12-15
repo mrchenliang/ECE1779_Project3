@@ -17,7 +17,7 @@ rekognition = boto3.client('rekognition', region_name="us-east-1")
 
 memcache_host = "http://0.0.0.0:5001"
 ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif'}
-ALLOWED_IMAGES = ['graffiti', 'art']
+ALLOWED_IMAGES = ['Graffiti', 'Art']
 
 def download_image(key):
     try: 

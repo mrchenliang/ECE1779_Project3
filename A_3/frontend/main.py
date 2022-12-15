@@ -6,7 +6,7 @@ from flask import Flask
 from api import api_routes
 from image import image_routes
 from manager import manager_routes
-from stat import stat_routes
+from stats import stat_routes
 
 webapp = Flask(__name__)
 webapp.register_blueprint(api_routes)

@@ -4,11 +4,11 @@ from constants import db_config
 
 def connect_to_database():
     # connect to the database
-    return mysql.connector.connect(user=db_config['user'],
-                                   password=db_config['password'],
-                                   host=db_config['host'],
-                                   port=db_config['port'],
-                                   database=db_config['database'])
+    return mysql.connector.connect(user='admin',
+                                   password='ece1779group2',
+                                   host='briandatabase.cls58pggr43c.us-east-1.rds.amazonaws.com',
+                                   port='3306',
+                                   database='briandatabase')
 
 def get_db():
     # get the database

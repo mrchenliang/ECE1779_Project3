@@ -1,12 +1,9 @@
 from flask import g
 import mysql.connector
 import os, requests, json
-resp = requests.get("http://169.254.169.254/latest/user-data")
-config = json.loads(resp.content.decode('utf-8'))
-
-db_config = {'user': config["MySQL_user"],
-             'password': config["MySQL_password"],
-             'host': config["MySQL_host"],
+db_config = {'user': 'admin',
+             'password': 'ece1779group2',
+             'host': 'briandatabase.cls58pggr43c.us-east-1.rds.amazonaws.com',
              'port': '3306',
              'database': 'memcache'
             }
