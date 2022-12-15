@@ -15,11 +15,6 @@ def upload_image():
         return render_template('upload_image.html', status=status)
     return render_template('upload_image.html')
 
-@image_routes.route('/get_image/<string:image>')
-# returns the actual image
-def get_image(image):
-    filepath = 'static/images/' + image
-    return send_file(filepath)
 
 @image_routes.route('/image', methods = ['GET','POST'])
 # returns the view image page
