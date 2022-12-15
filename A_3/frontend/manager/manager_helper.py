@@ -1,4 +1,5 @@
 import boto3
+from constants import default_max_capacity, default_replacement_policy
 
 dynamodb = boto3.resource('dynamodb')
 cache_properties = dynamodb.Table('cache_properties')
@@ -7,17 +8,16 @@ def get_cache():
     # get the cache properties from the database cache_properties
     try:
         response = cache_properties.get_item(
-        Key={
-                'policy_number' : 1,
-            }
+            Key={
+                    'policy_number' : 1,
+                }
         )
-
         if 'Item' in response:
             cache = response['Item']
             max_capacity = cache['max_capacity']
             replacement_policy = cache['replacement_policy']
             return max_capacity, replacement_policy
-        return None
+        return default_max_capacity, default_replacement_policy
     except:
         return None
 
