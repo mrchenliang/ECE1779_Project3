@@ -1,4 +1,4 @@
-import base64, os, requests, boto3, tempfile, json
+import base64, os, requests, boto3
 from botocore.config import Config
 from constants import memcache_host
 
@@ -10,7 +10,6 @@ config = Config(
     }
 )
 
-# s3 = boto3.client('s3',config=config, aws_access_key_id= aws_config['aws_access_key_id'], aws_secret_access_key= aws_config['aws_secret_access_key'])
 s3 = boto3.client('s3',config=config)
 rekognition = boto3.client('rekognition')
 dynamodb = boto3.resource('dynamodb')
