@@ -1,26 +1,27 @@
 from flask import Blueprint, jsonify, request
+
 from database_helper import get_db
 from image.image_helper import download_image, save_image
-import requests
+import requests, boto3
 
 api_routes = Blueprint('api_routes', __name__)
 
 # Backend Host Port
 memcache_host = 'http://0.0.0.0:5001'
 
+dynamodb = boto3.resource('dynamodb')
+images = dynamodb.Table('images')
+
 @api_routes.route('/api/list_keys', methods=['POST'])
 # api end point to get a list of keys
 def list_keys():
     try:
         # queries the database images for a list of keys
-        cnx = get_db()
-        cursor = cnx.cursor()
-        query = 'SELECT images.key FROM images'
-        cursor.execute(query)
+
+        response = images.scan()
         keys = []
-        for key in cursor:
-            keys.append(key[0])
-        cnx.close()
+        for item in response['Items']:
+            keys.append(item['key'])
 
         response = {
           'success': 'true',
@@ -50,15 +51,12 @@ def key(key_value):
         # if the image is not by the key in the memcache
         if res.text == 'Key Not Found' or res == None:
             # queries the database images by specific key
-            cnx = get_db()
-            cursor = cnx.cursor(buffered=True)
-            query = 'SELECT images.location FROM images where images.key = %s'
-            cursor.execute(query, (key_value,))
-            # if the image is found
-            if cursor._rowcount:
-                location=str(cursor.fetchone()[0]) 
-                cnx.close()
-                # convert the image to Base64
+            response = images.get_item(
+            Key = {
+                    'key' : key_value,
+                }
+            )
+            if 'Item' in response:
                 image = download_image(key_value)
                 if image == 'Image Not Found in S3':
                     response = {

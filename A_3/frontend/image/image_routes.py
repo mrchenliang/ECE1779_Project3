@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, render_template, request, send_file, redirect
 from database_helper import get_db
 from image.image_helper import *
-import requests, json
+import requests
 
 image_routes = Blueprint('image_routes', __name__)
 
@@ -38,24 +38,26 @@ def image():
         # if the image is not by the key in the memcache
         if res.text == 'Key Not Found' or res == None:
             # queries the database images by specific key
-            cnx = get_db()
-            cursor = cnx.cursor(buffered=True)
-            query = 'SELECT images.key FROM images where images.key = %s'
-            cursor.execute(query, (key_value,))
-            # if the image is found
-            if cursor._rowcount:
-                cnx.close()
-                # download image
-                image = download_image(key_value)
-                if image == 'Image Not Found in S3':
-                    return render_template('image.html', exists=False, image='does not exist')
-                request_json = { 
-                    key_value: image 
-                }
-                # put the key and image into the memcache
-                res = requests.post(memcache_host + '/put_into_memcache', json=request_json)
-                # returns view image page
-                return render_template('image.html', exists=True, image=image)
+            try:
+                response = images.get_item(
+                Key = {
+                        'key' : key_value,
+                    }
+                )
+                if 'Item' in response:
+                    image = download_image(key_value)
+                    if image == 'Image Not Found in S3':
+                        return render_template('image.html', exists=False, image='does not exist')
+                    request_json = { 
+                        key_value: image 
+                    }
+                    # put the key and image into the memcache
+                    res = requests.post(memcache_host + '/put_into_memcache', json=request_json)
+                    # returns view image page
+                    return render_template('image.html', exists=True, image=image)
+            except:
+                return render_template('image.html', exists=False, image='does not exist')
+
             else:
                 return render_template('image.html', exists=False, image='does not exist')
         else:
@@ -67,16 +69,14 @@ def image():
 # returns the webpage list of keys page
 def keys_list():
     # queries the database images for a list of keys
-    cnx = get_db()
-    cursor = cnx.cursor(buffered=True)
-    query = 'SELECT images.key FROM images'
-    cursor.execute(query)
-    keys = []
-    for key in cursor:
-        keys.append(key[0])
-    cnx.close()
-    # returns the webpage list of keys page
-    if keys:
-      return render_template('keys_list.html', keys=keys, length=len(keys))
-    else:
-      return render_template('keys_list.html')
+    try:
+        response = images.scan()
+        keys = []
+        for item in response['Items']:
+            keys.append(item['key'])
+        if keys:
+            return render_template('keys_list.html', keys=keys, length=len(keys))
+        else:
+            return render_template('keys_list.html')
+    except:
+        return render_template('keys_list.html')

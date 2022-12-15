@@ -10,7 +10,6 @@
         <h2>Memcache Manager Application</h2>
         <form method="post" class="cache-form" action="/set_cache">
             <h4>Memcache Configuration</h4>
-            <label>Cache Configured: <b>{{ created_at }}</b></label><br><br>
             <label for="max_capacity">Max Capacity:</label>
             <input 
                 type="text"
@@ -80,16 +79,5 @@
                 value="Clear Cache"
             >
         </form>
-        <form method="post" class="cache-form" action="/clear_data">
-            <h4>Data Control</h4>
-            <label>Clear Application Data</label>
-            <input style="display:none" name="clear_data">
-            <input
-                type="submit"
-                class="submit-button"
-                value="Clear Data"
-            >
-        </form>
-
     <body>    
 </html>

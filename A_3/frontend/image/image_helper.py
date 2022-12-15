@@ -13,7 +13,9 @@ config = Config(
 
 # s3 = boto3.client('s3',config=config, aws_access_key_id= aws_config['aws_access_key_id'], aws_secret_access_key= aws_config['aws_secret_access_key'])
 s3 = boto3.client('s3',config=config)
-rekognition = boto3.client('rekognition', region_name="us-east-1")
+rekognition = boto3.client('rekognition')
+dynamodb = boto3.resource('dynamodb')
+images = dynamodb.Table('images')
 
 memcache_host = "http://0.0.0.0:5001"
 ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif'}
@@ -58,33 +60,23 @@ def process_image(request, key):
             # post request to invalidate memcache by key
             res = requests.post(memcache_host + '/invalidate_specific_key', json=request_json)
             # add the key and location to the database
-            return add_image_to_db(key, filename)
+            return write_dynamo(key, filename)
         else:
             return 'INVALID'
     return 'INVALID'
 
-def add_image_to_db(key, location):
+def write_dynamo(key, location):
     if key == '' or location == '':
         return 'FAILURE'
-    try:
-        # write to the database images with the key and location
-        cnx = get_db()
-        cursor = cnx.cursor(buffered = True)
-        # check if the key already exists
-        query_exists = 'SELECT EXISTS(SELECT 1 FROM images WHERE images.key = (%s))'
-        cursor.execute(query_exists,(key,))
-        # if it exists, delete the key and location
-        for elem in cursor:
-            if elem[0] == 1:
-                query_delete = 'DELETE FROM images WHERE images.key=%s'
-                cursor.execute(query_delete,(key,))
-                break
-        # write to the database images with the key and location
-        query_insert = '''INSERT INTO images (images.key, images.location) VALUES (%s,%s);'''
-        cursor.execute(query_insert,(key,location,))
-        cnx.commit()
-        cnx.close()
-        return 'OK'
+    try: 
+        response = images.put_item(
+        Item={
+                'key': key,
+                'location': location,
+            }
+        )
+        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+            return "OK"
     except:
         return 'FAILURE'
 
@@ -114,7 +106,7 @@ def save_image(request, key):
                 # post request to invalidate memcache by key
                 res = requests.post(memcache_host + '/invalidate_specific_key', json=request_json)
                 # add the key and location to the database
-                return add_image_to_db(key, filename)
+                return write_dynamo(key, filename)
             else:
                 return 'INVALID'
         return 'INVALID'
@@ -138,9 +130,3 @@ def check_image_rekognition(image):
       if name in ALLOWED_IMAGES and confidence > 80:
         return True
     return False
-
-def clear_images():
-    s3_clear = boto3.resource('s3',config=config)
-    bucket = s3_clear.Bucket('briansbucket')
-    bucket.objects.all().delete()
-    return True
