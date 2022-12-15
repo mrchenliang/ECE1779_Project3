@@ -1,9 +1,7 @@
 
 from flask import Blueprint
 import requests, time
-from flask import render_template, request, redirect
-from database_helper import get_db
-from image.image_helper import clear_images
+from flask import render_template, request
 from manager.manager_helper import get_cache, set_cache
 
 manager_routes = Blueprint("manager_routes", __name__)

@@ -14,8 +14,8 @@ def get_cache():
 
         if 'Item' in response:
             cache = response['Item']
-            max_capacity = cache[0]
-            replacement_policy = cache[1] 
+            max_capacity = cache['max_capacity']
+            replacement_policy = cache['replacement_policy']
             return max_capacity, replacement_policy
         return None
     except:

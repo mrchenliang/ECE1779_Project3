@@ -1,6 +1,4 @@
 from flask import Blueprint, jsonify, request
-
-from database_helper import get_db
 from image.image_helper import download_image, save_image
 import requests, boto3
 

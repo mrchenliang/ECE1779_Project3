@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, render_template, request, send_file, redirect
-from database_helper import get_db
 from image.image_helper import *
 import requests
 
