@@ -31,14 +31,15 @@ def memcache_properties():
             if resp.json() == 'OK':
                 return render_template('manager.html',
                 max_capacity=max_capacity,
-                replacement_policy=replacement_policy)
+                replacement_policy=replacement_policy,
+                status="OK")
              
         # On error, reset to old params
         max_capacity, replacement_policy = get_cache()
         return render_template('manager.html',
                 max_capacity=max_capacity,
                 replacement_policy=replacement_policy,
-                status="TRUE")
+                status="INVALID")
         
     # On GET
     max_capacity, replacement_policy = get_cache()

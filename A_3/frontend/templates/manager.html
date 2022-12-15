@@ -8,7 +8,7 @@
     <body>
         {% include "navbar.html" %}
         <h2>Memcache Manager Application</h2>
-        <form method="post" class="cache-form" action="/set_cache">
+        <form method="post" class="cache-form" action="/dev/set_cache">
             <h4>Memcache Configuration</h4>
             <label for="max_capacity">Max Capacity:</label>
             <input 
@@ -69,7 +69,7 @@
             {% endif %}
         </div>
         <br>
-        <form method="post" class="cache-form" action="/clear_cache">
+        <form method="post" class="cache-form" action="/dev/clear_cache">
             <h4>Memcache Control</h4>
             <label>Clear Memcache Data</label>
             <input style="display:none" name="clear_cache">

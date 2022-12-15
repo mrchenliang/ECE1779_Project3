@@ -9,7 +9,7 @@ def get_cache():
     try:
         response = cache_properties.get_item(
             Key={
-                    'policy_number' : 1,
+                    'policy_number' : '1',
                 }
         )
         if 'Item' in response:
@@ -19,7 +19,7 @@ def get_cache():
             return max_capacity, replacement_policy
         return default_max_capacity, default_replacement_policy
     except:
-        return None
+        return default_max_capacity, default_replacement_policy
 
 def set_cache(max_capacity, replacement_policy):
     # put new cache properties into the database cache_properties
@@ -27,7 +27,7 @@ def set_cache(max_capacity, replacement_policy):
 
         response = cache_properties.put_item(
         Item={
-                'policy_number': 1,
+                'policy_number': '1',
                 'max_capacity': max_capacity,
                 'replacement_policy': replacement_policy,
             }
