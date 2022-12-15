@@ -18,7 +18,7 @@ def clear_images():
     :return: bool
     """
     s3_clear = boto3.resource('s3',config=my_aws_config)
-    bucket = s3_clear.Bucket('briansbucket')
+    bucket = s3_clear.Bucket('pics1779')
     bucket.objects.all().delete()
     return True
 
@@ -50,7 +50,7 @@ def upload_file(file_name, bucket, s3=None, object_name=None):
     return True
     
 
-def download_file(key,bucket='briansbucket',s3=None):
+def download_file(key,bucket='pics1779',s3=None):
     """
     Using this function to download a file from an S3 bucket
     :param key: The downloading file

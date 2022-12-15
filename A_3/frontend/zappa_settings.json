@@ -4,7 +4,7 @@
         "profile_name": "default",
         "project_name": "frontend",
         "runtime": "python3.9",
-        "s3_bucket": "zappa-duilpl7rx",
-        "aws_region": "us-east-1"
+        "aws_region": "us-east-1",
+        "s3_bucket": "zappa-p29dztoh3"
     }
 }

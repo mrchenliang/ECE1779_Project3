@@ -20,12 +20,7 @@ ALLOWED_IMAGES = ['Graffiti', 'Art']
 
 def download_image(key):
     try: 
-        with open('Temp.txt', 'wb') as file:
-            s3.download_fileobj('briansbucket', key, file)
-        with open('Temp.txt', 'rb') as file:
-            base64_image = file.read().decode('utf-8')
-        file.close()
-        os.remove("Temp.txt")
+        base64_image = s3.get_object(Bucket='pics1779', Key=key)["Body"].read().decode('utf-8')
         return base64_image
     except:
         return 'Image Not Found in S3'
@@ -33,22 +28,17 @@ def download_image(key):
 def process_image(request, key):
     # get the image file
     file = request.files['file']
+    file_bytes = file.read()
     _, extension = os.path.splitext(file.filename)
     # if the image is one of the allowed extensions
     if extension.lower() in ALLOWED_EXTENSIONS:
-        if check_image_rekognition(file) == True:
+        if check_image_rekognition(file_bytes) == True:
             filename = key + extension
-            # save the image in the s3
             print('uploading')
+            base64_image = base64.b64encode(file_bytes)
+            s3.put_object(Body=base64_image, Bucket='pics1779', Key=key)
+            print("uploaded")
 
-            base64_image = base64.b64encode(file.read())
-            try:
-                s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket')
-                print("uploaded")
-            except:
-                return "INVALID"
-
-            
             # post request to invalidate memcache by key
             request_json = {
                 "key": key
@@ -80,16 +70,17 @@ def save_image(request, key):
     try:
         # get the image file
         file = request.files['file']
+        file_bytes = file.read()
         _, extension = os.path.splitext(file.filename)
         # if the image is one of the allowed extensions
         if extension.lower() in ALLOWED_EXTENSIONS:
-            if check_image_rekognition(file) == True:
+            if check_image_rekognition(file_bytes) == True:
                 filename = key + extension
                 # save the image in the s3
                 print("uploading")
-                base64_image = base64.b64encode(file.read())
+                base64_image = base64.b64encode(file_bytes)
                 try:
-                    s3.put_object(Body=base64_image, Key=key, Bucket='briansbucket')
+                    s3.put_object(Body=base64_image, Key=key, Bucket='pics1779')
                     print("uploaded")
                 except:
                     return "INVALID"
@@ -115,7 +106,7 @@ def check_image_rekognition(image):
     :return: bool
     """
     # Check if the object_name is given or not, if not, using the file_name as the object_name
-    response = rekognition.detect_labels(Image={'Bytes': image.read()})
+    response = rekognition.detect_labels(Image={'Bytes': image})
 
     labels = response['Labels']
     print(f'Found {len(labels)} labels in the image:')

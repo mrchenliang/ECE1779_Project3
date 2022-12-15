@@ -5,6 +5,6 @@
         "profile_name": "default",
         "project_name": "memcache_app",
         "runtime": "python3.8",
-        "s3_bucket": "briansbucket"
+        "s3_bucket": "pics1779"
     }
 }

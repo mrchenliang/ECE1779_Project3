@@ -9,6 +9,8 @@ flask = "*"
 mysql = "*"
 mysql-connector-python = "*"
 pandas = "*"
+config = "*"
+pybase64 = "*"
 
 [dev-packages]
 
