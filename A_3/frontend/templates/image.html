@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <head>
-    <title>Image by key</title>
+    <title>Art by Title</title>
     <link rel= "stylesheet" type= "text/css" href= "https://group2-a3-static-s3.s3.amazonaws.com/main.css" />
 </head> 
 <html>
     <body>
         {% include "navbar.html" %}
-        <h2>Image</h2>
+        <h2>Art</h2>
         <form method="post">
             <label>Key:</label>
             <input type="text" name="key_value" />
             <br>
-            <input type="submit" value="Get Key" />
+            <input type="submit" value="Get Art" />
         </form>
         {% if image is defined %}
           {% if exists %}

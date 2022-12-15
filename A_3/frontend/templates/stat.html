@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>Very simple memcache</title>
+  <title>Stat</title>
   <link rel= "stylesheet" type= "text/css" href= "https://group2-a3-static-s3.s3.amazonaws.com/main.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.1.0/echarts-en.common.min.js"></script>
 </head> 
@@ -53,7 +53,7 @@
         color: ['#37A2FF', '#FF0087', '#FFBF00'],
         title: {
           display: true,
-          text: 'Average Memcache Size (B)',
+          text: 'Memcache Size (B)',
         },
         xAxis: {
           type: 'category',
@@ -98,7 +98,7 @@
       var miss_rate_chart_options = {
         title: {
           display: true,
-          text: 'Average Miss Rate Percent',
+          text: 'Miss Rate Percent',
         },
         color: ['#37A2FF', '#FF0087', '#FFBF00'],
         xAxis: {
@@ -143,7 +143,7 @@
       var hit_rate_chart_options = {
         title: {
           display: true,
-          text: 'Average Hit Rate Percent',
+          text: 'Hit Rate Percent',
         },
         color: ['#37A2FF', '#FF0087', '#FFBF00'],
         xAxis: {
@@ -189,7 +189,7 @@
       var key_count_chart_options = {
         title: {
           display: true,
-          text: 'Average Number of Keys Per Cache',
+          text: 'Number of Keys Per Cache',
         },
         color: ['#37A2FF', '#FF0087', '#FFBF00'],
         xAxis: {
@@ -235,7 +235,7 @@
       var request_count_chart_options = {
         title: {
           display: true,
-          text: 'Average Request Count Per Cache',
+          text: 'Request Count Per Cache',
         },
         color: ['#37A2FF', '#FF0087', '#FFBF00'],
         xAxis: {

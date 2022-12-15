@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <head>
-    <title>Very simple memcache</title>
+    <title>Upload Art</title>
     <link rel= "stylesheet" type= "text/css" href= "https://group2-a3-static-s3.s3.amazonaws.com/main.css" />
 </head> 
 <html>
     <body>
         {% include "navbar.html" %}
-        <h2>Upload Image</h2>
+        <h2>Upload Art</h2>
         <form
             class="form-outline"
             method="post"
             enctype=multipart/form-data
         >
-            <label for="key">Insert Key:</label>
+            <label for="key">Art Title:</label>
             <input type="text" id="key" name="key">
             <br>
-            <label>Upload Image:</label>
+            <label>Upload Art:</label>
             <input type="file" name="file" id="file" accept="image/*"/>
             <br>
             <input type="submit" id="submit">
             {% if status is defined %}
                 <div class="status">
                     {% if status == "OK" %}
-                        <h4 style="color: green">Image Successfully Added</h4>
+                        <h4 style="color: green">Art Successfully Added</h4>
                     {% elif status == "FAILURE" %}
-                        <h4 style="color: rgb(172, 16, 16)">Database Failure - Image Not Added</h4>
+                        <h4 style="color: rgb(172, 16, 16)">Database Failure - Art Not Added</h4>
                     {% elif status == "INVALID" %}
-                        <h4 style="color: rgb(172, 16, 16)">Image Type Not Supported</h4>
+                        <h4 style="color: rgb(172, 16, 16)">Art Type Not Supported</h4>
                     {% endif %}
                 </div>
             {% endif %}
