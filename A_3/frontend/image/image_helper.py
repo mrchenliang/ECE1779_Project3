@@ -67,34 +67,32 @@ def write_dynamo(key, location):
         return 'FAILURE'
 
 def save_image(request, key):
-    try:
-        # get the image file
-        file = request.files['file']
-        file_bytes = file.read()
-        _, extension = os.path.splitext(file.filename)
-        # if the image is one of the allowed extensions
-        if extension.lower() in ALLOWED_EXTENSIONS:
-            if check_image_rekognition(file_bytes) == True:
-                filename = key + extension
-                # save the image in the s3
-                print("uploading")
-                base64_image = base64.b64encode(file_bytes)
-                s3.put_object(Body=base64_image, Bucket='pics1779', Key=key)
-                print("uploaded")
-                
-                # post request to invalidate memcache by key
-                request_json = {
-                    "key": key
-                }
-                # post request to invalidate memcache by key
-                res = requests.post(memcache_host + '/invalidate_specific_key', json=request_json)
-                # add the key and location to the database
-                return write_dynamo(key, filename)
-            else:
-                return 'INVALID'
-        return 'INVALID'
-    except:
-        return "INVALID"
+    # get the image file
+    file = request.files['file']
+    file_bytes = file.read()
+    _, extension = os.path.splitext(file.filename)
+    # if the image is one of the allowed extensions
+    if extension.lower() in ALLOWED_EXTENSIONS:
+        if check_image_rekognition(file_bytes) == True:
+            filename = key + extension
+            # save the image in the s3
+            print("uploading")
+            base64_image = base64.b64encode(file_bytes)
+            s3.put_object(Body=base64_image, Bucket='pics1779', Key=key)
+            print("uploaded")
+            
+            # post request to invalidate memcache by key
+            request_json = {
+                "key": key
+            }
+            # post request to invalidate memcache by key
+            res = requests.post(memcache_host + '/invalidate_specific_key', json=request_json)
+            # add the key and location to the database
+            return write_dynamo(key, filename)
+        else:
+            return 'INVALID'
+    return 'INVALID'
+
 
 def check_image_rekognition(image):
     """
