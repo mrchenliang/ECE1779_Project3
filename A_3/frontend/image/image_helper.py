@@ -79,11 +79,8 @@ def save_image(request, key):
                 # save the image in the s3
                 print("uploading")
                 base64_image = base64.b64encode(file_bytes)
-                try:
-                    s3.put_object(Body=base64_image, Key=key, Bucket='pics1779')
-                    print("uploaded")
-                except:
-                    return "INVALID"
+                s3.put_object(Body=base64_image, Bucket='pics1779', Key=key)
+                print("uploaded")
                 
                 # post request to invalidate memcache by key
                 request_json = {
